@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SmartAgro — Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <script>
+    if (!localStorage.getItem('isAuthenticated')) location.href = 'login.html';
+  </script>
+
+  <custom-navbar></custom-navbar>
+
+  <div class="container page">
+    <div class="header-row">
+      <h1 style="color:#e6f6ef">Dashboard</h1>
+      <div id="statusSmall" style="color:#94a3b8">
+        Last update: <span id="lastUpdate">—</span>
+      </div>
+    </div>
+
+    <!-- ✅ Conservation Mode Box -->
+    <div id="conserveModeBox" style="margin:12px 0;display:none;text-align:center;">
+      <button id="conserveBtn" class="primary-btn" style="background:#38bdf8">
+        💧 Enable Conservation Mode
+      </button>
+      <p id="conserveStatus" style="margin-top:6px;color:#94a3b8;font-size:0.9rem;"></p>
+    </div>
+
+    <section class="dashboard-grid" id="cards">
+      <div class="card">
+        <div class="title">Soil Moisture</div>
+        <div class="value" id="soilVal">--%</div>
+        <div class="chart-wrap"><canvas id="soilChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Temperature</div>
+        <div class="value" id="tempVal">--°C</div>
+        <div class="chart-wrap"><canvas id="tempChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Humidity</div>
+        <div class="value" id="humVal">--%</div>
+        <div class="chart-wrap"><canvas id="humChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Light (LDR)</div>
+        <div class="value" id="lightVal">--</div>
+        <div class="chart-wrap"><canvas id="lightChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Rain Sensor</div>
+        <div class="value" id="rainVal">No</div>
+      </div>
+
+      <div class="card">
+        <div class="title">Water Level</div>
+        <div class="value" id="waterVal">--cm</div>
+      </div>
+
+      <!-- ✅ Weather Forecast Card -->
+      <div class="card" id="weatherCard">
+        <div class="title">Weather Forecast</div>
+        <div id="weatherInfo" style="margin-top:10px">
+          <p>Loading...</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:26px">
+      <div class="card table-card">
+        <h3 style="margin:12px 0;color:var(--accent)">Recent Alerts</h3>
+        <table class="table" id="alertsTable">
+          <thead>
+            <tr><th>Time</th><th>Message</th><th>Severity</th><th>Action</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <custom-footer></custom-footer>
+
+  <script src="components/navbar.js"></script>
+  <script src="components/footer.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

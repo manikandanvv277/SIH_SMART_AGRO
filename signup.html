@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SmartAgro — Create Account</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background: radial-gradient(circle at top left, #07111a 0%, #000 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #e6f6ef;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .signup-box {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      padding: 40px 36px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.15);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .signup-box h1 {
+      color: var(--accent, #22c55e);
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      text-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+    }
+
+    .signup-box p {
+      font-size: 0.9rem;
+      color: #9da7b5;
+      margin-bottom: 24px;
+    }
+
+    .signup-box input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e6f6ef;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+      transition: all 0.25s ease-in-out;
+    }
+
+    .signup-box input:focus {
+      box-shadow: 0 0 10px #22c55e;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .signup-box button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: var(--accent, #22c55e);
+      color: #01210d;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease-in-out;
+      font-size: 1rem;
+      margin-top: 6px;
+    }
+
+    .signup-box button:hover {
+      background: #32ff8b;
+      box-shadow: 0 0 12px #32ff8b;
+      transform: translateY(-2px);
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .link {
+      color: #22c55e;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-box">
+    <h1>Create Account</h1>
+    <p>Register to access SmartAgro dashboard</p>
+
+    <input type="text" id="newUser" placeholder="Username" required>
+    <input type="password" id="newPass" placeholder="Password" required>
+    <input type="password" id="confirmPass" placeholder="Confirm Password" required>
+
+    <button onclick="createAccount()">Sign Up</button>
+
+    <div class="footer-text">
+      Already have an account? <a href="login.html" class="link">Login here</a>
+    </div>
+  </div>
+
+  <script>
+    function createAccount() {
+      const user = document.getElementById("newUser").value.trim();
+      const pass = document.getElementById("newPass").value.trim();
+      const confirm = document.getElementById("confirmPass").value.trim();
+
+      if (!user || !pass || !confirm) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      if (pass !== confirm) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      // store account locally
+      const accounts = JSON.parse(localStorage.getItem("accounts") || "{}");
+      if (accounts[user]) {
+        alert("Username already exists. Try another one.");
+        return;
+      }
+
+      accounts[user] = pass;
+      localStorage.setItem("accounts", JSON.stringify(accounts));
+
+      alert("Account created successfully! Please login.");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Settings | SmartAgro</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"></head>
+<body>
+<script> if(!localStorage.getItem('isAuthenticated')) location.href='/login.html'; </script>
+<custom-navbar></custom-navbar>
+<div class="container page">
+  <div class="header-row"><h2>Sensor Thresholds</h2></div>
+  <div class="card">
+    <form id="settings">
+      <div class="form-row">
+        <label style="width:200px">Soil Moisture (%) <input id="th-soil" class="input" type="number"></label>
+        <label style="width:200px">Temperature (°C) <input id="th-temp" class="input" type="number"></label>
+        <label style="width:200px">Humidity (%) <input id="th-hum" class="input" type="number"></label>
+        <label style="width:200px">Water Level (cm) <input id="th-water" class="input" type="number"></label>
+      </div>
+      <div style="margin-top:12px;text-align:right"><button type="submit">Save</button></div>
+    </form>
+  </div>
+</div>
+<custom-footer></custom-footer>
+
+<script src="/components/navbar.js"></script>
+<script src="/components/footer.js"></script>
+<script>
+const defaults={soil:30,temp:35,hum:35,water:18};
+function load(){ const t=JSON.parse(localStorage.getItem('thresholds')||JSON.stringify(defaults)); document.getElementById('th-soil').value=t.soil; document.getElementById('th-temp').value=t.temp; document.getElementById('th-hum').value=t.hum; document.getElementById('th-water').value=t.water; }
+document.getElementById('settings').addEventListener('submit', e=>{
+  e.preventDefault();
+  const t={soil:+document.getElementById('th-soil').value, temp:+document.getElementById('th-temp').value, hum:+document.getElementById('th-hum').value, water:+document.getElementById('th-water').value};
+  localStorage.setItem('thresholds', JSON.stringify(t));
+  alert('Thresholds saved');
+});
+load();
+</script>
+</body>
+</html>

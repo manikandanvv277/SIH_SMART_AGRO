@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><title>Crops | SmartAgro</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<script> if(!localStorage.getItem('isAuthenticated')) location.href='/login.html'; </script>
+
+<custom-navbar></custom-navbar>
+
+<div class="container page">
+  <div class="header-row">
+    <h2>Crops Manager</h2>
+    <button id="addBtn">Add Crop</button>
+  </div>
+
+  <div class="card table-card">
+    <table class="table" id="cropsTable">
+      <thead><tr><th>Name</th><th>Planting</th><th>Schedule (days)</th><th>Notes</th><th>Action</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- modal (simple) -->
+  <div id="modal" style="display:none;position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center">
+    <div style="background:var(--card);padding:20px;border-radius:12px;width:360px">
+      <h3 id="modalTitle">Add</h3>
+      <div style="margin-top:12px">
+        <input id="mName" class="input" placeholder="Crop name"><br><br>
+        <input id="mPlant" type="date" class="input"><br><br>
+        <input id="mSchedule" type="number" class="input" placeholder="Schedule days"><br><br>
+        <textarea id="mNotes" class="input" placeholder="Notes"></textarea><br><br>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button id="saveCrop">Save</button>
+          <button id="cancelCrop">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<custom-footer></custom-footer>
+<script src="/components/navbar.js"></script>
+<script src="/components/footer.js"></script>
+<script>
+const tbody = document.querySelector('#cropsTable tbody');
+let crops = JSON.parse(localStorage.getItem('crops')||'[]');
+function render(){
+  tbody.innerHTML = crops.map((c,i)=>`<tr><td>${c.name}</td><td>${c.plant}</td><td>${c.schedule}</td><td>${c.notes}</td><td><button onclick="edit(${i})">Edit</button> <button onclick="del(${i})">Del</button></td></tr>`).join('');
+}
+window.del = i => { if(confirm('Delete?')){crops.splice(i,1); localStorage.setItem('crops', JSON.stringify(crops)); render(); } }
+window.edit = i => {
+  const item = crops[i];
+  document.getElementById('modalTitle').innerText = 'Edit Crop';
+  document.getElementById('mName').value = item.name;
+  document.getElementById('mPlant').value = item.plant;
+  document.getElementById('mSchedule').value = item.schedule;
+  document.getElementById('mNotes').value = item.notes;
+  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('saveCrop').onclick = ()=>{ saveEdit(i); };
+}
+function saveEdit(i){
+  crops[i] = {
+    name: document.getElementById('mName').value,
+    plant: document.getElementById('mPlant').value,
+    schedule: document.getElementById('mSchedule').value,
+    notes: document.getElementById('mNotes').value
+  };
+  localStorage.setItem('crops', JSON.stringify(crops));
+  document.getElementById('modal').style.display='none'; render();
+}
+document.getElementById('addBtn').addEventListener('click', ()=>{
+  document.getElementById('modalTitle').innerText='Add Crop';
+  document.getElementById('mName').value='';document.getElementById('mPlant').value='';document.getElementById('mSchedule').value='';document.getElementById('mNotes').value='';
+  document.getElementById('saveCrop').onclick = addCrop;
+  document.getElementById('modal').style.display='flex';
+});
+function addCrop(){
+  const newc = { name: document.getElementById('mName').value, plant: document.getElementById('mPlant').value, schedule: document.getElementById('mSchedule').value, notes: document.getElementById('mNotes').value};
+  crops.push(newc); localStorage.setItem('crops', JSON.stringify(crops)); document.getElementById('modal').style.display='none'; render();
+}
+document.getElementById('cancelCrop').addEventListener('click', ()=> document.getElementById('modal').style.display='none');
+render();
+</script>
+</body>
+</html>

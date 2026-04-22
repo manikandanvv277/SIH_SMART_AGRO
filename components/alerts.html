@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Alerts | SmartAgro</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"></head>
+<body>
+<script> if(!localStorage.getItem('isAuthenticated')) location.href='/login.html'; </script>
+<custom-navbar></custom-navbar>
+<div class="container page">
+  <div class="header-row"><h2>Alerts</h2></div>
+  <div class="card table-card">
+    <table class="table" id="alertsList"><thead><tr><th>Time</th><th>Alert</th><th>Severity</th></tr></thead><tbody></tbody></table>
+  </div>
+</div>
+<custom-footer></custom-footer>
+<script src="/components/navbar.js"></script>
+<script src="/components/footer.js"></script>
+<script>
+// read alerts from dashboard table (we store recent alerts only in DOM there). We'll also check thresholds against lastSensors
+const tbody = document.querySelector('#alertsList tbody');
+function pushRow(time,msg,sev){ tbody.insertAdjacentHTML('afterbegin', `<tr><td>${time}</td><td>${msg}</td><td>${sev}</td></tr>`); while(tbody.children.length>30) tbody.removeChild(tbody.lastChild); }
+const last = JSON.parse(localStorage.getItem('lastSensors')||'null');
+const thr = JSON.parse(localStorage.getItem('thresholds')||'{"soil":30,"temp":35,"hum":35,"water":18}');
+if(last){
+  if(last.soil < thr.soil) pushRow(new Date().toLocaleString(), `Soil low: ${last.soil}%`, 'High');
+  if(last.temp > thr.temp) pushRow(new Date().toLocaleString(), `High temp: ${last.temp}°C`, 'High');
+  if(last.hum < thr.hum) pushRow(new Date().toLocaleString(), `Low humidity: ${last.hum}%`, 'Medium');
+  if(last.water < thr.water) pushRow(new Date().toLocaleString(), `Water low: ${last.water}cm`, 'Medium');
+  if(last.rain) pushRow(new Date().toLocaleString(), `Rain detected`, 'Info');
+} else {
+  pushRow(new Date().toLocaleString(), 'No sensor data yet (dashboard not opened)', 'Info');
+}
+</script>
+</body>
+</html>
